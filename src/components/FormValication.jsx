@@ -73,7 +73,7 @@ const FormValidation = () => {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded shadow-md w-96"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+        <h2 className=" mb-4 text-center text-2xl font-bold">Register</h2>
 
         {/* Name Field */}
         <div className="mb-4">

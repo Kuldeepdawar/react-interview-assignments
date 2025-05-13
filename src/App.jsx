@@ -10,8 +10,8 @@ const App = () => {
       {/* <CrupOperation /> */}
       {/* <DebouncedSearch /> */}
       {/* <ApnaCode /> */}
-      <DebouncedSearch />
-      {/* <FormValidation /> */}
+      {/* <DebouncedSearch /> */}
+      <FormValidation />
     </div>
   );
 };
