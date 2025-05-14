@@ -1,90 +1,98 @@
 import React, { useEffect, useState } from "react";
-// how many post you want to show I want 5
-const POSTS_PER_PAGE = 5;
-const Pagination = () => {
-  // fetch state and store in state
-  const [posts, setPost] = useState([]);
 
-  // state for current page
+// Number of posts to show per page
+const POSTS_PER_PAGE = 5;
+
+const Pagination = () => {
+  // State to store all fetched posts
+  const [posts, setPosts] = useState([]);
+
+  // State to track the current page number
   const [page, setPage] = useState(1);
 
-  // state for loading state
+  // State to show loading status while fetching posts
   const [loading, setLoading] = useState(true);
 
-  // fetch data from jsonplaceholder.typicode.com.posts
+  // Fetch posts from API when component mounts
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/posts")
       .then((response) => response.json())
       .then((data) => {
-        setPost(data);
-        setLoading(false);
+        setPosts(data); // Save posts into state
+        setLoading(false); // Turn off loading once data is ready
       })
       .catch((error) => {
-        console.error("fetching error", error);
-        setLoading(false);
+        console.error("Fetching error:", error);
+        setLoading(false); // Stop loading even if error occurs
       });
   }, []);
 
-  // determine the post based on current page
+  // Calculate starting index for current page
   const startIndex = (page - 1) * POSTS_PER_PAGE;
-  // 1-1 = 0*5 = 0
-  //=2-1 = 1*5 = 5
-  // 3-1 = 2*5= 10
+
+  // Calculate ending index for current page
   const endIndex = startIndex + POSTS_PER_PAGE;
 
-  const currentPostIndex = posts.slice(startIndex, endIndex);
+  // Slice the posts array to show only current page's posts
+  const currentPostList = posts.slice(startIndex, endIndex);
 
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE); // 100/5 = 20
+  // Calculate total number of pages
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 
-  // decrease page
+  // Handle going to the previous page
   const handlePrev = () => {
     if (page > 1) setPage(page - 1);
   };
-  // handle increase page
-  const handleIncreasePage = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
+
+  // Handle going to the next page
+  const handleNext = () => {
+    if (page < totalPages) setPage(page + 1);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-7 bg-gray-100">
-      <div className="bg-white border-md w-full max-w-2xl ">
+      <div className="bg-white p-6 rounded-md w-full max-w-2xl shadow-lg">
         <h2 className="font-bold text-2xl text-center mb-6">Post List</h2>
-        {/*SHowing loading state when data is fetched */}
 
+        {/* Show loading spinner while fetching data */}
         {loading ? (
           <p className="text-center text-gray-400">Loading...</p>
         ) : (
           <>
-            {/*display the post */}
+            {/* Render posts list */}
             <ul className="space-y-4">
-              {currentPostIndex.map((post) => (
-                <li key={post.id} className="p-4 border rounded-md shadow-2xl">
+              {currentPostList.map((post) => (
+                <li key={post.id} className="p-4 border rounded-md shadow">
                   <p className="text-lg font-semibold">{post.title}</p>
                   <p className="text-gray-600">{post.body}</p>
                 </li>
               ))}
             </ul>
-            <div className="p-6 flex justify-between items-center">
+
+            {/* Pagination controls */}
+            <div className="pt-6 flex justify-between items-center">
               <button
                 onClick={handlePrev}
                 disabled={page === 1}
-                className="px-4 py-2 bg-blue-500 text-white disabled:bg-gray-400"
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
               >
                 Previous
               </button>
-              <span className=" text-gray-700 font-medium">
+              <span className="text-gray-700 font-medium">
                 Page {page} of {totalPages}
               </span>
-              <button className="bg-blue-500 text-white px-4 py-2 disabled:bg-gray-500">
+              <button
+                onClick={handleNext}
+                disabled={page === totalPages}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+              >
                 Next
               </button>
+              w
             </div>
           </>
         )}
       </div>
-      Pagination
     </div>
   );
 };
